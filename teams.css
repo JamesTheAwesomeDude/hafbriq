@@ -1,0 +1,14 @@
+.has-clan[data-clan=赤]{ box-shadow: 0 0 1em Maroon; }
+.has-clan[data-clan=黄]{ box-shadow: 0 0 1em Olive; }
+.has-clan[data-clan=緑]{ box-shadow: 0 0 1em Green; }
+.has-clan[data-clan=空]{ box-shadow: 0 0 1em Teal; }
+.has-clan[data-clan=青]{ box-shadow: 0 0 1em Navy; }
+.has-clan[data-clan=紫]{ box-shadow: 0 0 1em Purple; }
+
+.has-clan.leader[data-clan=赤]{ border: 2pt dotted Red; }
+.has-clan.leader[data-clan=黄]{ border: 2pt dotted Yellow; }
+.has-clan.leader[data-clan=緑]{ border: 2pt dotted Lime; }
+.has-clan.leader[data-clan=空]{ border: 2pt dotted Aqua; }
+.has-clan.leader[data-clan=青]{ border: 2pt dotted Blue; }
+.has-clan.leader[data-clan=紫]{ border: 2pt dotted Fuchsia; }
+
