@@ -82,11 +82,20 @@ function _saveGame(X){
 	xhr.open('POST','api.php',false);
 //	xhr.responseType='json';
 //	xhr.setRequestHeader("Content-type", "application/json");
-	console.log(JSON.stringify({'action':'save','field':JSON.stringify(X)}));
-	xhr.send(JSON.stringify({'action':'save','field':JSON.stringify(X)}));
+	xhr.send(JSON.stringify({'action':'PUT','field':JSON.stringify(X)}));
 	if((xhr.status/100|0)!=2) {throw xhr;};
 	var r=JSON.parse(xhr.responseText);
 //	return xhr.response;
+	return r;
+}
+
+function _takeAction(action,target){
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST','api.php',false);
+	xhr.send(JSON.stringify({'action':action,'target':target}));
+	if((xhr.status/100|0)!=2) {throw xhr;};
+	var r=JSON.parse(xhr.responseText);
+	if(r['status']=="success"&&xhr.status==205) {window.location.reload()};
 	return r;
 }
 
