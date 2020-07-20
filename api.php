@@ -3,7 +3,7 @@ error_reporting(-1);
 ini_set('display_errors', 'On');
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	header('Content-Type: application/json');
-	if (!file_exists("state.json") or file_get_contents("state.json")=="") {
+	if (!file_exists("state.json") or file_get_contents("state.json")=="" or file_get_contents("state.json")=="null") {
 		if (isset($_COOKIE['id'])) {
 			$id = $_COOKIE['id'];
 		} else {
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	$x=json_decode(file_get_contents('php://input'));
 	if ($x->action=='save') {
 		file_put_contents("state.json",$x->field);
-		print("{'status':'accepted'}");
+		print('{"status":"accepted"}');
 		return;
 	}
 }

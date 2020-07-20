@@ -22,8 +22,9 @@
 //reset the above element on reloads
 document.querySelector('select[onchange^="_selectClan("]').value="";
 </script>
-<div><a href="javascript:_forgetId();">forget ID</a></div>
-<div><a href="javascript:_forgetClan();">forget Clan</a></div>
+<div><a href="javascript:_forgetId();">forget ID (client-side)</a></div>
+<div><a href="javascript:_forgetClan();">forget Clan (client-side)</a></div>
+<div><a href="javascript:(()=>{_saveGame(null);})();">delete board (server-side)</a></div>
 </div>
 </body>
 </html>
