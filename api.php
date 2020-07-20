@@ -25,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	$x=json_decode(file_get_contents('php://input'));
 	if ($x->action=='save') {
 		file_put_contents("state.json",$x->field);
+		print("{'status':'accepted'}");
+		return;
 	}
 }
 //code should NOT still be running
