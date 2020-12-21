@@ -9,7 +9,7 @@
 <body onload="document.querySelector('#main a').click()">
 <div id="main"><a href="javascript:initializeGame();">START</a></div>
 <div id="settings">
-<select name="clan" onchange="_selectClan(event);">
+<select id="clanSelector" name="clan" onchange="_selectClan(event);">
 <option disabled selected value="">change clan</option>
 <option>赤</option>
 <option>黄</option>
@@ -20,7 +20,7 @@
 </select>
 <script type="text/javascript">
 //reset the above element on reloads
-document.querySelector('select[onchange^="_selectClan("]').value="";
+document.getElementById('clanSelector').value="";
 </script>
 <div><a href="javascript:_forgetId();">forget ID (client-side)</a></div>
 <div><a href="javascript:_forgetClan();">forget Clan (client-side)</a></div>
