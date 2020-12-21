@@ -57,11 +57,10 @@ async def game2app(game):
 	@routes.put('/pref')
 	async def update_pref(request):
 		try:
-			r = await request.json()
 			outcome = {}
 			name, id = _basic_auth(request.headers['Authorization'])
 			clan = request.cookies['clan']
-			actor = identify_actor(game, id=int(id or 0))
+			actor = identify_actor(game, name=name, id=int(id or 0))
 			if actor.name != name:
 				actor.name = name
 				outcome['name'] = name

@@ -12,56 +12,67 @@ function initializeGame() {
 function _initializeGame() {
 	var X = _loadGame();
 	var e = renderField(X);
-	e_old = document.querySelector('a[href^="javascript:initializeGame("]');
+	e_old = document.querySelector('a[href*="javascript:initializeGame"]');
 	if(e_old) e_old.replaceWith(e);
 	else document.body.prepend(e);
 }
 
-function renderField(X=[[{name:"james",id:417,hp:99,ap:69,clan:'紫'},null],[null,null]], es=["table","tr","td","span"]) {
-	var e = document.createElement(es[0]);
-	var clanLeaderboard = {};
-	var y = -1;
-	var x = -1;
-	X.forEach(r => {
-		y += 1 ; x = -1;
+function renderField(X=[[{name:"james",id:417,hp:99,ap:69,clan:'紫'},null],[null,null]], es=["table", "tr", "td", "p"]) {
+	let e = document.createElement(es[0]);
+	let clanLeaderboard = {};
 
-		let e_r = document.createElement(es[1]);
-		r.forEach(c => {
+	let y = -1;
+	let x = -1;
+	X.forEach(row => {
+		x = -1;
+		y += 1;
+
+		let e_row = document.createElement(es[1]);
+		row.forEach(cell => {
 			x += 1;
 
-			let e_c = document.createElement(es[2]);
-			if(c != null) {
-				for(let a in c) {
-					e_c.setAttribute(`data-${a}`, c[a]);
-					e_c.classList.add(`has-${a}`);
-					let e_a = document.createElement(es[3]);
-					e_a.innerText = c[a];
-					e_a.classList.add(`data-${a}`);
+			let e_cell = document.createElement(es[2]);
+
+			if(cell != null) {
+
+				let id = cell['id'];
+				let e_inner = document.createElement(es[3]);
+				console.log(id);
+				e_inner.innerText = playerNames[id % playerNames.length];
+
+				for(let attr in cell) {
+					let val = cell[attr];
+					e_cell.setAttribute(`data-${attr}`, val);
+					e_cell.classList.add(`has-${attr}`);
+					e_cell.title += `${attr}: ${val}\n`;
 				}
-				if('id' in c) {
-					//e_c.innerText=c['id'];
-					e_c.appendChild(
-					 document.createElement('p')
-					).innerText = playerNames[c['id'] % playerNames.length];
-				}
-				if('clan' in c && 'hp' in c && 'ap' in c) {
-					let clan = c['clan'];
-					let power = c['hp'] + c['ap'];
-					let coords = [x, y];
-					if(  (!(clan in clanLeaderboard)) || power > clanLeaderboard[clan][0]  ) {
-						clanLeaderboard[clan]=[power,coords];
-					} else if(power == clanLeaderboard[clan][0]) {
-						clanLeaderboard[clan] = [power,null];
+
+				if(('clan' in cell) && (cell['clan'] != null)) {
+					const clan = cell['clan'];
+					const power = cell['hp'] + cell['ap'] + cell['range'];
+					const coords = [x, y]; Object.freeze(coords);
+					e_cell.classList.add("has-clan");
+					e_cell.setAttribute("data-clan");
+					if(!(clan in clanLeaderboard) || clanLeaderboard[clan][0] < power) {
+						//New leader
+						clanLeaderboard[clan] = [power, coords];
+					} else if(clanLeaderboard[clan][0] == power) {
+						//No leader
+						clanLeaderboard[clan] = [power, null];
 					}
 				}
+
+				e_cell.appendChild(e_inner);
+
 			} else {
-				e_c.innerHTML='&nbsp;';
+				e_cell.innerHTML='&nbsp;';
 			}
 
-			e_r.appendChild(e_c);
+			e_row.appendChild(e_cell);
 		});
-		e.appendChild(e_r);
+		e.appendChild(e_row);
 	});
+
 	for(let clan in clanLeaderboard) {
 		if(clanLeaderboard[clan][1] != null) {
 			let [x, y] = clanLeaderboard[clan][1];
@@ -100,6 +111,19 @@ function _updatePrefs() {
 	return r;
 }
 
+function changeClan(event) {
+	_selectClan(event.target.value);
+	try {
+		_updatePrefs();
+	} catch(err) {
+		if(err.status == 401) {
+			window.location.href = './login';
+		} else {
+			throw err;
+		}
+	}
+}
+
 function _forgetId() {
 	document.cookie = 'id= ; max-age=0';
 }
@@ -108,6 +132,6 @@ function _forgetClan() {
 	document.cookie = 'clan= ; max-age=0';
 }
 
-function _selectClan(event) {
-	document.cookie = `clan=${encodeURIComponent(event.target.value)}; max-age=1234567`;
+function _selectClan(clan) {
+	document.cookie = `clan=${encodeURIComponent(clan)}; max-age=1234567`;
 }
