@@ -33,6 +33,24 @@ async def game2app(game):
 		except AssertionError as e:
 			return web.Response(status=400, text=json.dumps({'error': dict(*e.args)}), content_type='text/json')
 
+	@routes.put('/pref')
+	async def update_pref(request):
+		try:
+			r = await request.json()
+			outcome = {}
+			name, id = _basic_auth(request.headers['Authorization'])
+			clan = request.cookies['clan']
+			actor = identify_actor(game, int(id or 0))
+			if actor.name != name:
+				actor.name = name
+				outcome['name'] = name
+			if actor.clan != clan:
+				actor.clan = clan
+				outcome['clan'] = clan
+			return web.Response(text=json.dumps({'outcome': outcome}), content_type='text/json')
+		except AssertionError as e:
+			return web.Response(status=400, text=json.dumps({'error': dict(*e.args)}), content_type='text/json')
+
 	@routes.get('/board')
 	async def show_board(request):
 		return web.Response(text=(game.board.json(indent=2) + '\n'))
