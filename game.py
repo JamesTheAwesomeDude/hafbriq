@@ -13,7 +13,8 @@ class Game():
 			board = Board(**board)
 		self.board = board
 		self.interval = interval
-		self.players = self.board._init_players([{'name': f"Player {i+1}", 'id': random.getrandbits(64)} for i in range(n)])
+		self.players = [{'name': f"Player {i+1}", 'id': random.getrandbits(64)} for i in range(n)]
+		self.board._init_players(self.players)
 
 	async def aplay(self, actions_source, iter=True):
 		while True:
@@ -141,7 +142,7 @@ class Board():
 
 	def _init_players(self, players):
 		for player, (x, y) in zip(players, random.sample(list(itertools.product(range(len(self._board[0])), range(len(self._board)))), len(players))):
-			self._board[y][x] = Player(*player)
+			self._board[y][x] = Player(**player)
 
 	def locate(self, player):
 		for y, row in enumerate(self._board):
