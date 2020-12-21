@@ -46,7 +46,7 @@ async def game2app(game):
 		try:
 			r = await request.json()
 			name, id = _basic_auth(request.headers['Authorization'])
-			actor = identify_actor(game, int(id or 0))
+			actor = identify_actor(game, name=name, id=int(id or 0))
 			cmd = r['cmd']
 			target = r['target'] if 'target' in r else None
 			outcome = game.process_action(actor, cmd, target)
@@ -61,7 +61,7 @@ async def game2app(game):
 			outcome = {}
 			name, id = _basic_auth(request.headers['Authorization'])
 			clan = request.cookies['clan']
-			actor = identify_actor(game, int(id or 0))
+			actor = identify_actor(game, id=int(id or 0))
 			if actor.name != name:
 				actor.name = name
 				outcome['name'] = name
