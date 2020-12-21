@@ -38,7 +38,7 @@ async def game2app(game):
 	@routes.get('/login')
 	@needs_auth()
 	async def login_page(request):
-		return web.Response(status=302, headers={'location': "/"})
+		return web.Response(status=302, headers={'location': f"."})
 
 	@routes.post('/move')
 	@needs_auth()
