@@ -15,7 +15,7 @@ function _initializeGame(){
 	else document.body.prepend(e);
 }
 
-function renderField(X=[[{id:417,hp:99,ap:69,clan:'紫'},null],[null,null]],es=["table","tr","td","span"]){
+function renderField(X=[[{name:"james",id:417,hp:99,ap:69,clan:'紫'},null],[null,null]],es=["table","tr","td","span"]){
 	var e=document.createElement(es[0]);
 	var clanLeaderboard={};
 	var y=-1;
