@@ -22,3 +22,8 @@ td.has-id img {
  object-position: top;
  object-fit: cover;
 }
+
+td>p {
+ text-align: center;
+ font-size: 2em;
+}
