@@ -24,7 +24,8 @@ async def game2app(game):
 	async def handle_move(request):
 		try:
 			r = await request.json()
-			actor = identify_actor(request, game)
+			name, id = _basic_auth(request.headers['Authorization'])
+			actor = identify_actor(game, int(id or 0))
 			cmd = r['cmd']
 			target = r['target'] if 'target' in r else None
 			outcome = game.process_action(actor, cmd, target)
@@ -39,8 +40,10 @@ async def game2app(game):
 	app.add_routes(routes)
 	return app
 
-def identify_actor(request, game):
-	u, p = b64decode(request.headers['Authorization'].split('Basic ', 1)[1]).split(b':', 1)
-	u = u.decode()
-	p = int(p)
-	return next(player for player in game.players if player.name == u and player.id = p)
+def _basic_auth(auth_header):
+	auth = .split('Basic ', 1)[1]
+	u, p = b64decode(auth).split(b':', 1)
+	return u.decode(), p
+
+def identify_actor(game, name=None, id=None):
+	return next(player for player in game.players if player.name == u or player.id == p)
