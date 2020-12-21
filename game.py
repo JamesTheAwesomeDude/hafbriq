@@ -13,7 +13,7 @@ class Game():
 			board = Board(**board)
 		self.board = board
 		self.interval = interval
-		self.players = self.board._init_players(n=n)
+		self.players = self.board._init_players({'name': f"Player {i+1}", 'id': random.getrandbits(64)} for i in range(n))
 
 	async def aplay(self, actions_source, iter=True):
 		while True:
@@ -112,13 +112,13 @@ class Game():
 			raise ValueError(f"Unrecognized action '{cmd}'")
 
 class Player():
-	def __init__(self, name, hp=3, ap=3, range=3, id=None, clan=None):
+	def __init__(self, name, id, hp=3, ap=3, range=3, clan=None):
 		self.name = name
 		self.hp = hp
 		self.ap = ap
 		self.range = range
 		self.next_ap = datetime.datetime.utcnow()
-		self.id = id or random.getrandbits(64)
+		self.id = id
 		self.clan = clan
 
 	def json(self):
@@ -139,13 +139,9 @@ class Board():
 	def __init__(self, width=5, height=5):
 		self._board = tuple(list(None for _ in range(width)) for _ in range(height))
 
-	def _init_players(self, n):
-		players = []
-		for i, (x, y) in enumerate(random.sample(list(itertools.product(range(len(self._board[0])), range(len(self._board)))), n)):
-			p = Player(name=f"Player {i+1}")
-			players.append(p)
-			self._board[y][x] = p
-		return players
+	def _init_players(self, players):
+		for player, (x, y) in zip(players, random.sample(list(itertools.product(range(len(self._board[0])), range(len(self._board)))), len(players))):
+			self._board[y][x] = player
 
 	def locate(self, player):
 		for y, row in enumerate(self._board):
