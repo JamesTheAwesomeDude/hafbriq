@@ -71,7 +71,7 @@ function renderField(X=[[{name:"james",id:417,hp:99,ap:69,clan:'紫'},null],[nul
 
 function _loadGame() {
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', 'api.php', false);
+	xhr.open('GET', 'board', false);
 //	xhr.responseType='json';
 	xhr.send();
 	if((xhr.status/100|0) != 2) throw xhr;
@@ -80,25 +80,21 @@ function _loadGame() {
 	return r;
 }
 
-function _saveGame(X) {
+function _takeAction(action,target) {
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'api.php', false);
-//	xhr.responseType='json';
-//	xhr.setRequestHeader("Content-type", "application/json");
-	xhr.send(JSON.stringify({'action':'PUT', 'field':JSON.stringify(X)}));
-	if((xhr.status/100|0)!=2) throw xhr;
+	xhr.open('POST', 'move', false);
+	xhr.send(JSON.stringify({'cmd': action, 'target': target}));
+	if((xhr.status/100|0) != 2) throw xhr;
 	var r = JSON.parse(xhr.responseText);
-//	return xhr.response;
 	return r;
 }
 
-function _takeAction(action,target) {
+function _updatePrefs() {
 	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'api.php', false);
-	xhr.send(JSON.stringify({'action':action, 'target':target}));
+	xhr.open('PUT', 'pref', false);
+	xhr.send();
 	if((xhr.status/100|0) != 2) throw xhr;
 	var r = JSON.parse(xhr.responseText);
-	if(  (r['status'] == "success") && xhr.status == 205)  ) {window.location.reload()};
 	return r;
 }
 
