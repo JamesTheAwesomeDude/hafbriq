@@ -121,6 +121,9 @@ class Player():
 		self.id = id
 		self.clan = clan
 
+	def __repr__(self):
+		return f"<{self.name}>"
+
 	def json(self):
 		return json.dumps(self._obj())
 
