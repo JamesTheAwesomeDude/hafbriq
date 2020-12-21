@@ -112,16 +112,14 @@ class Game():
 			raise ValueError(f"Unrecognized action '{cmd}'")
 
 class Player():
-	def __init__(self, name, hp=3, ap=3, range=3, id=None):
+	def __init__(self, name, hp=3, ap=3, range=3, id=None, clan=None):
 		self.name = name
 		self.hp = hp
 		self.ap = ap
 		self.range = range
 		self.next_ap = datetime.datetime.utcnow()
 		self.id = id or random.getrandbits(64)
-
-	def __repr__(self):
-		return f'Player(name="{self.name}", hp={self.hp}, ap={self.ap}, range={self.range})'
+		self.clan = clan
 
 	def json(self):
 		return json.dumps(self._obj())
@@ -134,6 +132,7 @@ class Player():
 			'range':   self.range,
 			'next_ap': self.next_ap.ctime(),
 			'id':      self.id,
+			'clan':    self.clan,
 		}
 
 class Board():
@@ -166,6 +165,3 @@ class Board():
 
 	def json(self, **opts):
 		return json.dumps([[(cell._obj() if cell else None) for cell in row] for row in self._board], **opts)
-
-	def __repr__(self):
-		return '(\n' + '\n'.join('[' + ','.join(f'{repr(cell):8}' for cell in row) + ']' for row in self._board) + '\n)'
