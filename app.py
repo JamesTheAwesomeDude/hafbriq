@@ -10,6 +10,19 @@ async def game2app(game):
 	routes = web.RouteTableDef()
 	pwd = pathlib.Path(__file__).parent.absolute()
 
+	def needs_auth(validate=lambda request: identify_actor(game, *_basic_auth(request.headers['Authorization'])),
+	               unauthResponse=lambda: web.Response(status=401, headers={'WWW-Authenticate': "Basic"}, text="Unauthorized")):
+		"Decorator factory that produces decorators that return unauthResponse() if validate(request) fails, and pass through the request otherwise"
+		def auth_wrapper(f):
+			def _(request, *args, **kwargs):
+				try:
+					assert validate(request)
+				except (AssertionError, KeyError):
+					return unauthResponse()
+				return f(request, *args, **kwargs)
+			return _
+		return auth_wrapper
+
 	@routes.get('/')
 	async def main_page(request):
 		return web.FileResponse(path.join(pwd, 'srv', 'game.html'))
@@ -22,8 +35,13 @@ async def game2app(game):
 	@routes.get('/teams.css')
 	async def main_page(request):
 		return web.FileResponse(path.join(pwd, 'srv', 'teams.css'))
+	@routes.get('/login')
+	@needs_auth()
+	async def login_page(request):
+		return web.Response(status=302, headers={'location': "/"})
 
 	@routes.post('/move')
+	@needs_auth()
 	async def handle_move(request):
 		try:
 			r = await request.json()
@@ -67,4 +85,7 @@ def _basic_auth(auth_header):
 	return u.decode(), p
 
 def identify_actor(game, name=None, id=None):
-	return next(player for player in game.players if player.name == u or player.id == p)
+	try:
+		return next(player for player in game.players if player.name == name or player.id == id)
+	except StopIteration:
+		raise KeyError(name)
