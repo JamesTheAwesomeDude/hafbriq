@@ -1,24 +1,27 @@
 from aiohttp import web
 from base64 import b64decode
+import pathlib
+from os import path
 import json
 
 async def game2app(game):
 
 	app = web.Application()
 	routes = web.RouteTableDef()
+	pwd = pathlib.Path(__file__).parent.absolute()
 
 	@routes.get('/')
 	async def main_page(request):
-		return web.FileResponse('srv/game.html')
+		return web.FileResponse(path.join(pwd, 'srv', 'game.html'))
 	@routes.get('/game.js')
 	async def main_page(request):
-		return web.FileResponse('srv/game.js')
+		return web.FileResponse(path.join(pwd, 'srv', 'game.js'))
 	@routes.get('/game.css')
 	async def main_page(request):
-		return web.FileResponse('srv/game.css')
+		return web.FileResponse(path.join(pwd, 'srv', 'game.css'))
 	@routes.get('/teams.css')
 	async def main_page(request):
-		return web.FileResponse('srv/teams.css')
+		return web.FileResponse(path.join(pwd, 'srv', 'teams.css'))
 
 	@routes.post('/move')
 	async def handle_move(request):
