@@ -141,7 +141,7 @@ class Board():
 
 	def _init_players(self, players):
 		for player, (x, y) in zip(players, random.sample(list(itertools.product(range(len(self._board[0])), range(len(self._board)))), len(players))):
-			self._board[y][x] = player
+			self._board[y][x] = Player(*player)
 
 	def locate(self, player):
 		for y, row in enumerate(self._board):
