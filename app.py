@@ -29,9 +29,9 @@ async def game2app(game):
 			cmd = r['cmd']
 			target = r['target'] if 'target' in r else None
 			outcome = game.process_action(actor, cmd, target)
-			return web.Response(text=json.dumps({'outcome': outcome}), content_type='text/json')
+			return web.Response(text=json.dumps({'outcome': outcome}), content_type='application/json')
 		except AssertionError as e:
-			return web.Response(status=400, text=json.dumps({'error': dict(*e.args)}), content_type='text/json')
+			return web.Response(status=400, text=json.dumps({'error': dict(*e.args)}), content_type='application/json')
 
 	@routes.put('/pref')
 	async def update_pref(request):
@@ -47,13 +47,13 @@ async def game2app(game):
 			if actor.clan != clan:
 				actor.clan = clan
 				outcome['clan'] = clan
-			return web.Response(text=json.dumps({'outcome': outcome}), content_type='text/json')
+			return web.Response(text=json.dumps({'outcome': outcome}), content_type='application/json')
 		except AssertionError as e:
-			return web.Response(status=400, text=json.dumps({'error': dict(*e.args)}), content_type='text/json')
+			return web.Response(status=400, text=json.dumps({'error': dict(*e.args)}), content_type='application/json')
 
 	@routes.get('/board')
 	async def show_board(request):
-		return web.Response(text=(game.board.json(indent=2) + '\n'))
+		return web.Response(text=(game.board.json(indent=2) + '\n'), content_type='application/json')
 
 	app.add_routes(routes)
 	return app
