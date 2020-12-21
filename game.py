@@ -13,7 +13,7 @@ class Game():
 			board = Board(**board)
 		self.board = board
 		self.interval = interval
-		self.players = self.board._init_players({'name': f"Player {i+1}", 'id': random.getrandbits(64)} for i in range(n))
+		self.players = self.board._init_players([{'name': f"Player {i+1}", 'id': random.getrandbits(64)} for i in range(n)])
 
 	async def aplay(self, actions_source, iter=True):
 		while True:
