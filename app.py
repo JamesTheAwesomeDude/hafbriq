@@ -59,7 +59,7 @@ async def game2app(game):
 	return app
 
 def _basic_auth(auth_header):
-	auth = .split('Basic ', 1)[1]
+	auth = auth_header.split('Basic ', 1)[1]
 	u, p = b64decode(auth).split(b':', 1)
 	return u.decode(), p
 
